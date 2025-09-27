@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Civic Translator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 2rem;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+    }
+    :root {
+      --bg: #ffffff;
+      --text: #111111;
+    }
+    .dark {
+      --bg: #111111;
+      --text: #ffffff;
+    }
+    .toggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+    }
+    select, button {
+      margin: 0.5rem;
+      padding: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="toggle">
+    <button onclick="toggleDark()">🌙 Toggle Dark Mode</button>
+    <select onchange="translate(this.value)">
+      <option value="en">English</option>
+      <option value="el">Ελληνικά</option>
+      <option value="fr">Français</option>
+      <option value="es">Español</option>
+      <option value="zh">中文</option>
+      <option value="ar">العربية</option>
+    </select>
+  </div>
+
+  <h1 id="title">🌍 Civic Translator</h1>
+  <p id="intro">A multilingual, poetic platform for community engagement and civic clarity.</p>
+  <p id="purpose">Civic Translator transforms public data and community reports into accessible, multilingual dashboards. It is a ritual of transparency, a garden of civic meaning.</p>
+
+  <script>
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+    }
+
+    const translations = {
+      el: {
+        title: "🌍 Μεταφραστής Πολιτών",
+        intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια.",
+        purpose: "Μετατρέπει δημόσια δεδομένα σε προσβάσιμα dashboards. Ένα τελετουργικό διαφάνειας, ένας κήπος νοήματος."
+      },
+      fr: {
+        title: "🌍 Traducteur Civique",
+        intro: "Une plateforme multilingue et poétique pour l'engagement communautaire.",
+        purpose: "Transforme les données publiques en tableaux de bord accessibles. Un rituel de transparence, un jardin de sens civique."
+      },
+      es: {
+        title: "🌍 Traductor Cívico",
+        intro: "Una plataforma multilingüe y poética para la participación comunitaria.",
+        purpose: "Convierte datos públicos en paneles accesibles. Un ritual de transparencia, un jardín de significado cívico."
+      },
+      zh: {
+        title: "🌍 公民翻译器",
+        intro: "一个多语言、富有诗意的平台，促进社区参与与透明。",
+        purpose: "将公共数据转化为可访问的仪表板。是透明的仪式，是公民意义的花园。"
+      },
+      ar: {
+        title: "🌍 المترجم المدني",
+        intro: "منصة متعددة اللغات وشاعرية للمشاركة المجتمعية والوضوح المدني.",
+        purpose: "تحول البيانات العامة إلى لوحات معلومات متعددة اللغات. طقس من الشفافية، وحديقة من المعنى المدني."
+      }
+    };
+
+    function translate(lang) {
+      const t = translations[lang];
+      if (t) {
+        document.getElementById('title').textContent = t.title;
+        document.getElementById('intro').textContent = t.intro;
+        document.getElementById('purpose').textContent = t.purpose;
+      }
+    }
+  </script>
+</body>
+</html>
