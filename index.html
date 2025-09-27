@@ -163,7 +163,10 @@
     <option value="pt">Português</option>
     <option value="tr">Türkçe</option>
   </select>
+
+  <div id="instructionsBox" class="output"></div>
 </div>
+
 
 <textarea id="inputText" placeholder="Enter civic insight, poetic report, or public data..."></textarea>
 <button onclick="translateText()">Translate</button>
@@ -221,8 +224,10 @@ function translateDropdown() {
     document.getElementById("title").textContent = t.title;
     document.getElementById("intro").textContent = t.intro;
   }
+  document.getElementById("instructionsBox").textContent = instructions[lang];
   translateText();
 }
+
 
 async function translateText() {
   const input = document.getElementById("inputText").value;
