@@ -26,6 +26,16 @@
       flex-direction: column;
       align-items: center;
     }
+    header {
+      position: sticky;
+      top: 0;
+      background-color: var(--bg);
+      padding: 1rem;
+      width: 100%;
+      text-align: center;
+      z-index: 10;
+      border-bottom: 1px solid var(--accent);
+    }
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -54,15 +64,36 @@
       background-color: var(--bg);
       color: var(--text);
     }
-    .output {
+    .output, .mirror {
       margin-top: 2rem;
       max-width: 600px;
+      width: 100%;
       padding: 1rem;
       border-left: 4px solid var(--accent);
       background-color: rgba(0,0,0,0.05);
     }
+    .mirror {
+      font-style: italic;
+      color: var(--accent);
+    }
+    #civicLog {
+      margin-top: 3rem;
+      max-width: 600px;
+      width: 100%;
+      padding: 1rem;
+      border-top: 1px dashed var(--accent);
+    }
     @media (max-width: 600px) {
-      textarea, .output {
+      body {
+        font-size: 0.95rem;
+      }
+      h1 {
+        font-size: 1.2rem;
+      }
+      .controls {
+        flex-direction: column;
+      }
+      textarea, .output, .mirror {
         width: 90%;
       }
       select, button {
@@ -72,8 +103,10 @@
   </style>
 </head>
 <body>
-  <h1 id="title">🌍 Civic Translator</h1>
-  <p id="intro">A multilingual, poetic platform for community engagement and civic clarity.</p>
+  <header>
+    <h1 id="title">🌍 Civic Translator</h1>
+    <p id="intro">A multilingual, poetic platform for community engagement and civic clarity.</p>
+  </header>
 
   <div class="controls">
     <button onclick="toggleDark()">🌙 Toggle Dark Mode</button>
@@ -104,7 +137,13 @@
   <textarea id="inputText" placeholder="Enter civic insight, poetic report, or public data..."></textarea>
   <button onclick="translateText()">Translate</button>
 
+  <div class="mirror" id="mirrorPreview"></div>
   <div class="output" id="translatedOutput"></div>
+
+  <section id="civicLog">
+    <h3>Civic Log (coming soon)</h3>
+    <p>Here you’ll see your translation history, badges, and poetic dispatches.</p>
+  </section>
 
   <script>
     function toggleDark() {
@@ -134,6 +173,9 @@
       pl: { title: "🌍 Tłumacz Obywatelski", intro: "Wielojęzyczna, poetycka platforma dla zaangażowania społecznego." }
     };
 
+
+        };
+
     function translateDropdown() {
       const lang = document.getElementById("language").value;
       const t = translations[lang];
@@ -153,6 +195,11 @@
       }
       output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${input}</em>`;
     }
+
+    document.getElementById("inputText").addEventListener("input", function () {
+      const mirror = document.getElementById("mirrorPreview");
+      mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
+    });
   </script>
 </body>
 </html>
