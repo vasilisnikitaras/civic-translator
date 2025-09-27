@@ -5,37 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Civic Translator</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 0;
-      padding: 2rem;
-      background-color: var(--bg);
-      color: var(--text);
-      transition: background 0.3s, color 0.3s;
-    }
     :root {
       --bg: #ffffff;
       --text: #111111;
+      --accent: #0077cc;
     }
     .dark {
       --bg: #111111;
       --text: #ffffff;
+      --accent: #66ccff;
     }
-    .toggle {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: background 0.3s, color 0.3s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
     select, button {
-      margin: 0.5rem;
-      padding: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 4px;
+      background-color: var(--accent);
+      color: white;
+      cursor: pointer;
+    }
+    textarea {
+      width: 100%;
+      max-width: 600px;
+      height: 120px;
+      padding: 1rem;
+      font-size: 1rem;
+      border: 1px solid var(--accent);
+      border-radius: 4px;
+      resize: vertical;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+    .output {
+      margin-top: 2rem;
+      max-width: 600px;
+      padding: 1rem;
+      border-left: 4px solid var(--accent);
+      background-color: rgba(0,0,0,0.05);
+    }
+    @media (max-width: 600px) {
+      textarea, .output {
+        width: 90%;
+      }
+      select, button {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="toggle">
+  <h1 id="title">🌍 Civic Translator</h1>
+  <p id="intro">A multilingual, poetic platform for community engagement and civic clarity.</p>
+
+  <div class="controls">
     <button onclick="toggleDark()">🌙 Toggle Dark Mode</button>
-    <select onchange="translate(this.value)">
+    <select id="language" onchange="translateDropdown()">
       <option value="en">English</option>
       <option value="el">Ελληνικά</option>
       <option value="fr">Français</option>
@@ -46,12 +88,23 @@
       <option value="pt">Português</option>
       <option value="ru">Русский</option>
       <option value="ja">日本語</option>
+      <option value="de">Deutsch</option>
+      <option value="it">Italiano</option>
+      <option value="nl">Nederlands</option>
+      <option value="ko">한국어</option>
+      <option value="tr">Türkçe</option>
+      <option value="sv">Svenska</option>
+      <option value="uk">Українська</option>
+      <option value="id">Bahasa Indonesia</option>
+      <option value="vi">Tiếng Việt</option>
+      <option value="pl">Polski</option>
     </select>
   </div>
 
-  <h1 id="title">🌍 Civic Translator</h1>
-  <p id="intro">A multilingual, poetic platform for community engagement and civic clarity.</p>
-  <p id="purpose">Civic Translator transforms public data and community reports into accessible, multilingual dashboards. It is a ritual of transparency, a garden of civic meaning.</p>
+  <textarea id="inputText" placeholder="Enter civic insight, poetic report, or public data..."></textarea>
+  <button onclick="translateText()">Translate</button>
+
+  <div class="output" id="translatedOutput"></div>
 
   <script>
     function toggleDark() {
@@ -59,65 +112,46 @@
     }
 
     const translations = {
-      en: {
-        title: "🌍 Civic Translator",
-        intro: "A multilingual, poetic platform for community engagement and civic clarity.",
-        purpose: "Civic Translator transforms public data and community reports into accessible, multilingual dashboards. It is a ritual of transparency, a garden of civic meaning."
-      },
-      el: {
-        title: "🌍 Μεταφραστής Πολιτών",
-        intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια.",
-        purpose: "Μετατρέπει δημόσια δεδομένα σε προσβάσιμα dashboards. Ένα τελετουργικό διαφάνειας, ένας κήπος νοήματος."
-      },
-      fr: {
-        title: "🌍 Traducteur Civique",
-        intro: "Une plateforme multilingue et poétique pour l'engagement communautaire.",
-        purpose: "Transforme les données publiques en tableaux de bord accessibles. Un rituel de transparence, un jardin de sens civique."
-      },
-      es: {
-        title: "🌍 Traductor Cívico",
-        intro: "Una plataforma multilingüe y poética para la participación comunitaria.",
-        purpose: "Convierte datos públicos en paneles accesibles. Un ritual de transparencia, un jardín de significado cívico."
-      },
-      zh: {
-        title: "🌍 公民翻译器",
-        intro: "一个多语言、富有诗意的平台，促进社区参与与透明。",
-        purpose: "将公共数据转化为可访问的仪表板。是透明的仪式，是公民意义的花园。"
-      },
-      ar: {
-        title: "🌍 المترجم المدني",
-        intro: "منصة متعددة اللغات وشاعرية للمشاركة المجتمعية والوضوح المدني.",
-        purpose: "تحول البيانات العامة إلى لوحات معلومات متعددة اللغات. طقس من الشفافية، وحديقة من المعنى المدني."
-      },
-      hi: {
-        title: "🌍 नागरिक अनुवादक",
-        intro: "एक बहुभाषी, काव्यात्मक मंच जो सामुदायिक भागीदारी और नागरिक स्पष्टता को बढ़ावा देता है।",
-        purpose: "यह सार्वजनिक डेटा को सुलभ डैशबोर्ड में बदलता है। यह पारदर्शिता का एक अनुष्ठान है, नागरिक अर्थ का एक बगीचा।"
-      },
-      pt: {
-        title: "🌍 Tradutor Cívico",
-        intro: "Uma plataforma multilíngue e poética para o engajamento comunitário.",
-        purpose: "Transforma dados públicos em painéis acessíveis. Um ritual de transparência, um jardim de significado cívico."
-      },
-      ru: {
-        title: "🌍 Гражданский Переводчик",
-        intro: "Многоязычная поэтическая платформа для гражданского участия и прозрачности.",
-        purpose: "Преобразует общественные данные в доступные панели. Это ритуал прозрачности, сад гражданского смысла."
-      },
-      ja: {
-        title: "🌍 シビック・トランスレーター",
-        intro: "多言語で詩的なプラットフォーム。市民の関与と透明性を促進します。",
-        purpose: "公共データを多言語のダッシュボードに変換します。これは透明性の儀式であり、市民的意味の庭です。"
-      }
+      en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
+      el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
+      fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
+      es: { title: "🌍 Traductor Cívico", intro: "Una plataforma multilingüe y poética para la participación comunitaria." },
+      zh: { title: "🌍 公民翻译器", intro: "一个多语言、富有诗意的平台，促进社区参与与透明。" },
+      ar: { title: "🌍 المترجم المدني", intro: "منصة متعددة اللغات وشاعرية للمشاركة المجتمعية والوضوح المدني." },
+      hi: { title: "🌍 नागरिक अनुवादक", intro: "एक बहुभाषी, काव्यात्मक मंच जो सामुदायिक भागीदारी और नागरिक स्पष्टता को बढ़ावा देता है।" },
+      pt: { title: "🌍 Tradutor Cívico", intro: "Uma plataforma multilíngue e poética para o engajamento comunitário." },
+      ru: { title: "🌍 Гражданский Переводчик", intro: "Многоязычная поэтическая платформа для гражданского участия и прозрачности." },
+      ja: { title: "🌍 シビック・トランスレーター", intro: "多言語で詩的なプラットフォーム。市民の関与と透明性を促進します。" },
+      de: { title: "🌍 Bürgerübersetzer", intro: "Eine mehrsprachige, poetische Plattform für bürgerschaftliches Engagement." },
+      it: { title: "🌍 Traduttore Civico", intro: "Una piattaforma multilingue e poetica per l'impegno civico." },
+      nl: { title: "🌍 Burgervertaler", intro: "Een meertalige, poëtische platform voor burgerparticipatie." },
+      ko: { title: "🌍 시민 번역기", intro: "다국어 시적 플랫폼으로 시민 참여와 투명성을 촉진합니다." },
+      tr: { title: "🌍 Sivil Çevirmen", intro: "Toplumsal katılım için çok dilli, şiirsel bir platform." },
+      sv: { title: "🌍 Medborgaröversättare", intro: "En flerspråkig, poetisk plattform för samhällsengagemang." },
+      uk: { title: "🌍 Громадянський Перекладач", intro: "Багатомовна поетична платформа для громадської участі." },
+      id: { title: "🌍 Penerjemah Sipil", intro: "Platform multibahasa dan puitis untuk keterlibatan komunitas." },
+      vi: { title: "🌍 Trình Dịch Công Dân", intro: "Một nền tảng đa ngôn ngữ, đầy chất thơ cho sự tham gia cộng đồng." },
+      pl: { title: "🌍 Tłumacz Obywatelski", intro: "Wielojęzyczna, poetycka platforma dla zaangażowania społecznego." }
     };
 
-    function translate(lang) {
+    function translateDropdown() {
+      const lang = document.getElementById("language").value;
       const t = translations[lang];
       if (t) {
-        document.getElementById('title').textContent = t.title;
-        document.getElementById('intro').textContent = t.intro;
-        document.getElementById('purpose').textContent = t.purpose;
+        document.getElementById("title").textContent = t.title;
+        document.getElementById("intro").textContent = t.intro;
       }
+    }
+
+    function translateText() {
+      const input = document.getElementById("inputText").value;
+      const lang = document.getElementById("language").value;
+      const output = document.getElementById("translatedOutput");
+      if (input.trim() === "") {
+        output.textContent = "Please enter civic insight to translate.";
+        return;
+      }
+      output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${input}</em>`;
     }
   </script>
 </body>
