@@ -238,9 +238,7 @@ async function translateText() {
   }
 
   try {
-const res = await fetch("https://translate.argosopentech.com/translate", {
- 
-
+    const res = await fetch("https://translate.argosopentech.com/translate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -260,6 +258,7 @@ const res = await fetch("https://translate.argosopentech.com/translate", {
     badge.textContent = "⚠️ Dispatch interrupted.";
   }
 }
+
 
 document.getElementById("inputText").addEventListener("input", function () {
   const mirror = document.getElementById("mirrorPreview");
