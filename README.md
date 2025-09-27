@@ -17,3 +17,9 @@ Clone the repo and run:
 ```bash
 npm install
 npm start
+
+MIT License
+
+Copyright (c) 2025 Vasilis Nikitaras
+
+Permission is hereby granted, free of charge, to any person obtaining a copy...
