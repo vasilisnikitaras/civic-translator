@@ -8,11 +8,12 @@
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
+  <!-- 🌸 Static Poetic UI -->
   <h1>🪶 Civic Translator</h1>
   <label class="dark-toggle">
-  <input type="checkbox" id="darkModeToggle" />
-  🌙 Dark Mode
-</label>
+    <input type="checkbox" id="darkModeToggle" />
+    🌙 Dark Mode
+  </label>
 
   <textarea id="inputText" placeholder="📝 Write something..."></textarea>
   <div class="controls">
@@ -23,6 +24,10 @@
   <h2>✅ Translated:</h2>
   <div id="outputText" class="output"></div>
 
+  <!-- 🌱 React Mount Point -->
+  <div id="root"></div>
+
+  <!-- 🛡️ Scripts -->
   <script src="script.js"></script>
   <script>
     if ("serviceWorker" in navigator) {
