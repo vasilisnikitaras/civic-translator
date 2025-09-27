@@ -89,6 +89,11 @@
       border-top: 1px dashed var(--accent);
       color: var(--text);
     }
+    footer {
+      margin-top: 4rem;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
     @media (max-width: 600px) {
       body {
         font-size: 0.95rem;
@@ -148,96 +153,117 @@
   <div class="badge" id="badgeDisplay"></div>
 
   <section id="civicLog">
-    <h3>Civic Log (coming soon)</h3>
-    <p>Here you’ll see your translation history, badges, and poetic dispatches.</p>
+    <h3>Civic Log</h3>
+    <ul id="logList"></ul>
   </section>
 
-  <script>
-    const translations = {
-      en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
-      el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
-      fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
-      // ... (όλες οι υπόλοιπες γλώσσες όπως πριν)
-    };
-
-    let civicHistory = [];
-
-    function toggleDark() {
-      document.body.classList.toggle('dark');
-    }
-
-    function translateDropdown() {
-      const lang = document.getElementById("language").value;
-      const t = translations[lang];
-      if (t) {
-        document.getElementById("title").textContent = t.title;
-        document.getElementById("intro").textContent = t.intro;
-      }
-      translateText(); // αυτόματη μετάφραση
-    }
-
-    function translateText() {
-      const input = document.getElementById("inputText").value;
-      const lang = document.getElementById("language").value;
-      const output = document.getElementById("translatedOutput");
-      const badge = document.getElementById("badgeDisplay");
-      const log = document.getElementById("civicLog");
-
-      if (input.trim() === "") {
-        output.textContent = "Please enter civic insight to translate.";
-        badge.textContent = "";
-        return;
-      }
-
-      output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${input}</em>`;
-      badge.textContent = "🌱 Insight Seed dispatched!";
-
-      civicHistory.push(`[${lang}] “${input}”`);
-      log.innerHTML = `<h3>Civic Log</h3><ul>` + civicHistory.map(item => `<li>${item}</li>`).join("") + `</ul>`;
-    }
-
-    document.getElementById("inputText").addEventListener("input", function () {
-      const mirror = document.getElementById("mirrorPreview");
-      mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
-    });
-
-    window.onload = function () {
-      translateDropdown();
-      showWelcome();
-    };
-
-    function showWelcome() {
-      if (!localStorage.getItem("welcomeSeen")) {
-        const modal = document.createElement("div");
-        modal.style.position = "fixed";
-        modal.style.top = "0";
-        modal.style.left = "0";
-        modal.style.width = "100%";
-        modal.style.height = "100%";
-        modal.style.background = "rgba(0,0,0,0.8)";
-        modal.style.color = "white";
-        modal.style.display = "flex";
-        modal.style.flexDirection = "column";
-        modal.style.justifyContent = "center";
-        modal.style.alignItems = "center";
-        modal.style.zIndex = "9999";
-        modal.innerHTML = `
-          <h2>🌸 Welcome to the Civic Garden</h2>
-          <p>This poetic translator helps communities bloom across languages.</p>
-          <button style="margin-top:1rem;padding:0.5rem 1rem;" onclick="dismissWelcome()">Enter</button>
-        `;
-        document.body.appendChild(modal);
-      }
-    }
-
-    function dismissWelcome() {
-      localStorage.setItem("welcomeSeen", "true");
-      document.body.removeChild(document.body.lastChild);
-    }
-  </script>
-
-  <footer style="margin-top:4rem; font-size:0.9rem; color:var(--text);">
+  <footer>
     © Vasileios Nikitaras – Fanes. All rights reserved.
   </footer>
-</body>
+
+<script>
+const translations = {
+  en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
+  el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
+  fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
+  // ...συνέχισε με τις υπόλοιπες γλώσσες
+};
+
+let civicHistory = [];
+
+function toggleDark() {
+  document.body.classList.toggle('dark');
+}
+
+function translateDropdown() {
+  const lang = document.getElementById("language").value;
+  const t = translations[lang];
+  if (t) {
+    document.getElementById("title").textContent = t.title;
+    document.getElementById("intro").textContent = t.intro;
+  }
+  translateText(); // αυτόματη μετάφραση
+}
+
+async function translateText() {
+  const input = document.getElementById("inputText").value;
+  const lang = document.getElementById("language").value;
+  const output = document.getElementById("translatedOutput");
+  const badge = document.getElementById("badgeDisplay");
+  const logList = document.getElementById("logList");
+
+  if (input.trim() === "") {
+    output.textContent = "Please enter civic insight to translate.";
+    badge.textContent = "";
+    return;
+  }
+
+  try {
+    const res = await fetch("https://libretranslate.de/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: input,
+        source: "auto",
+        target: lang,
+        format: "text"
+      })
+    });
+    const data = await res.json();
+    output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${data.translatedText}</em>`;
+    badge.textContent = "🌱 Insight Seed dispatched!";
+    civicHistory.push(`[${lang}] “${data.translatedText}”`);
+    logList.innerHTML = civicHistory.map(item => `<li>${item}</li>`).join("");
+  } catch (err) {
+    output.textContent = "Translation failed. Please try again.";
+    badge.textContent = "⚠️ Dispatch interrupted.";
+  }
+}
+
+document.getElementById("inputText").addEventListener("input", function () {
+  const mirror = document.getElementById("mirrorPreview");
+  mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
+});
+
+window.onload = function () {
+  translateDropdown();
+  showWelcome();
+};
+
+function showWelcome() {
+  if (!localStorage.getItem("welcomeSeen")) {
+    const modal = document.createElement("div");
+    modal.style.position = "fixed";
+    modal.style.top = "0";
+    modal.style.left = "0";
+    modal.style.width = "100%";
+    modal.style.height = "100%";
+    modal.style.background = "rgba(0,0,0,0.8)";
+    modal.style.color = "white";
+    modal.style.display = "flex";
+    modal.style.flexDirection = "column";
+    modal.style.justifyContent = "center";
+    modal.style.alignItems = "center";
+    modal.style.zIndex = "9999";
+    modal.innerHTML = `
+      <h2>🌸 Welcome to the Civic Garden</h2>
+      <p>This poetic translator helps communities bloom across languages.</p>
+      <button style="margin-top:1rem;padding:0.5rem 1rem;" onclick="dismissWelcome()">Enter</button>
+    `;
+    document.body.appendChild(modal);
+  }
+}
+
+function dismissWelcome() {
+  localStorage.setItem("welcomeSeen", "true");
+  document.body.removeChild(document.body.lastChild);
+}
+</script>
+
+  </body>
 </html>
+
+
+
+
+      
