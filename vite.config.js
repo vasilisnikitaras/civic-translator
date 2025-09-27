@@ -1,14 +1,15 @@
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
 export default defineConfig({
-  root: 'CivicTranslator',
-  publicDir: 'CivicTranslator/assets',
+  plugins: [react()],
+  base: '/civic-translator/', // 👈 GitHub Pages path
   build: {
     outDir: 'dist',
-    emptyOutDir: true
+    emptyOutDir: true,
   },
   server: {
     port: 5173,
-    open: true
-  }
+    open: true,
+  },
 });
