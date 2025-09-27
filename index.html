@@ -4,117 +4,154 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Civic Translator</title>
-  <style>
-    :root {
-      --bg: #ffffff;
-      --text: #111111;
-      --accent: #0077cc;
-    }
-    .dark {
-      --bg: #111111;
-      --text: #ffffff;
-      --accent: #66ccff;
-    }
-    body {
-      margin: 0;
-      padding: 2rem;
-      font-family: sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      transition: background 0.3s, color 0.3s;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    header {
-      position: sticky;
-      top: 0;
-      background-color: var(--bg);
-      padding: 1rem;
-      width: 100%;
-      text-align: center;
-      z-index: 10;
-      border-bottom: 1px solid var(--accent);
-    }
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 2rem;
-    }
-    select, button {
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border: none;
-      border-radius: 4px;
-      background-color: var(--accent);
-      color: white;
-      cursor: pointer;
-    }
-    textarea {
-      width: 100%;
-      max-width: 600px;
-      height: 120px;
-      padding: 1rem;
-      font-size: 1rem;
-      border: 1px solid var(--accent);
-      border-radius: 4px;
-      resize: vertical;
-      background-color: var(--bg);
-      color: var(--text);
-    }
-    .output, .mirror, .badge {
-      margin-top: 2rem;
-      max-width: 600px;
-      width: 100%;
-      padding: 1rem;
-      border-left: 4px solid var(--accent);
-      background-color: rgba(0,0,0,0.05);
-      color: var(--text);
-    }
-    .mirror {
-      font-style: italic;
-      color: var(--accent);
-    }
-    .badge {
-      font-weight: bold;
-      color: green;
-    }
-    #civicLog {
-      margin-top: 3rem;
-      max-width: 600px;
-      width: 100%;
-      padding: 1rem;
-      border-top: 1px dashed var(--accent);
-      color: var(--text);
-    }
-    footer {
-      margin-top: 4rem;
-      font-size: 0.9rem;
-      color: var(--text);
-    }
-    @media (max-width: 600px) {
-      body {
-        font-size: 0.95rem;
-      }
-      h1 {
-        font-size: 1.2rem;
-      }
-      .controls {
-        flex-direction: column;
-      }
-      textarea, .output, .mirror, .badge {
-        width: 90%;
-      }
-      select, button {
-        width: 100%;
-      }
-    }
-  </style>
+
+
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --accent: #0077cc;
+}
+.dark {
+  --bg: #111111;
+  --text: #ffffff;
+  --accent: #66ccff;
+}
+body {
+  margin: 0;
+  padding: 2rem;
+  font-family: sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+header {
+  position: sticky;
+  top: 0;
+  background-color: var(--bg);
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  border-bottom: 1px solid var(--accent);
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+select, button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+textarea {
+  width: 100%;
+  max-width: 600px;
+  height: 120px;
+  padding: 1rem;
+  font-size: 1rem;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  resize: vertical;
+  background-color: var(--bg);
+  color: var(--text);
+}
+.output, .mirror, .badge {
+  margin-top: 2rem;
+  max-width: 600px;
+  width: 100%;
+  padding: 1rem;
+  border-left: 4px solid var(--accent);
+  background-color: rgba(0,0,0,0.05);
+  color: var(--text);
+}
+.mirror {
+  font-style: italic;
+  color: var(--accent);
+}
+.badge {
+  font-weight: bold;
+  color: green;
+}
+#civicLog {
+  margin-top: 3rem;
+  max-width: 600px;
+  width: 100%;
+  padding: 1rem;
+  border-top: 1px dashed var(--accent);
+  color: var(--text);
+}
+footer {
+  margin-top: 4rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+#welcomeModal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.85);
+  color: white;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+#welcomeModal h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+#welcomeModal p {
+  font-size: 1.2rem;
+}
+#welcomeModal button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+@media (max-width: 600px) {
+  body {
+    font-size: 0.95rem;
+  }
+  h1 {
+    font-size: 1.2rem;
+  }
+  .controls {
+    flex-direction: column;
+  }
+  textarea, .output, .mirror, .badge {
+    width: 90%;
+  }
+  select, button {
+    width: 100%;
+  }
+}
+
+
+  
 </head>
 <body>
   <header>
+    <button onclick="returnToWelcome()" style="position:absolute;left:1rem;top:1rem;">🏠 Home</button>
     <h1 id="title">🌍 Civic Translator</h1>
     <p id="intro">A multilingual, poetic platform for community engagement and civic clarity.</p>
   </header>
@@ -126,22 +163,14 @@
       <option value="el">Ελληνικά</option>
       <option value="fr">Français</option>
       <option value="es">Español</option>
-      <option value="zh">中文</option>
-      <option value="ar">العربية</option>
-      <option value="hi">हिन्दी</option>
-      <option value="pt">Português</option>
-      <option value="ru">Русский</option>
-      <option value="ja">日本語</option>
       <option value="de">Deutsch</option>
       <option value="it">Italiano</option>
-      <option value="nl">Nederlands</option>
-      <option value="ko">한국어</option>
+      <option value="zh">中文</option>
+      <option value="ar">العربية</option>
+      <option value="ru">Русский</option>
+      <option value="ja">日本語</option>
+      <option value="pt">Português</option>
       <option value="tr">Türkçe</option>
-      <option value="sv">Svenska</option>
-      <option value="uk">Українська</option>
-      <option value="id">Bahasa Indonesia</option>
-      <option value="vi">Tiếng Việt</option>
-      <option value="pl">Polski</option>
     </select>
   </div>
 
@@ -157,6 +186,13 @@
     <ul id="logList"></ul>
   </section>
 
+  <!-- 🌸 Welcome Modal -->
+  <div id="welcomeModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);color:white;z-index:9999;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+    <h2>🌸 Welcome to the Civic Garden</h2>
+    <p>This poetic translator helps communities bloom across languages.</p>
+    <button onclick="dismissWelcome()" style="margin-top:1rem;padding:0.5rem 1rem;">Enter</button>
+  </div>
+
   <footer>
     © Vasileios Nikitaras – Fanes. All rights reserved.
   </footer>
@@ -166,7 +202,15 @@ const translations = {
   en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
   el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
   fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
-  // ...συνέχισε με τις υπόλοιπες γλώσσες
+  es: { title: "🌍 Traductor Cívico", intro: "Una plataforma multilingüe y poética para la participación comunitaria." },
+  de: { title: "🌍 Bürgerübersetzer", intro: "Eine mehrsprachige, poetische Plattform für bürgerschaftliches Engagement." },
+  it: { title: "🌍 Traduttore Civico", intro: "Una piattaforma multilingue e poetica per l'impegno civico." },
+  zh: { title: "🌍 公民翻译器", intro: "一个多语言、富有诗意的平台，促进社区参与与透明。" },
+  ar: { title: "🌍 المترجم المدني", intro: "منصة متعددة اللغات وشاعرية للمشاركة المجتمعية والوضوح المدني." },
+  ru: { title: "🌍 Гражданский Переводчик", intro: "Многоязычная поэтическая платформа для гражданского участия и прозрачности." },
+  ja: { title: "🌍 シビック・トランスレーター", intro: "多言語で詩的なプラットフォーム。市民の関与と透明性を促進します。" },
+  pt: { title: "🌍 Tradutor Cívico", intro: "Uma plataforma multilíngue e poética para o engajamento comunitário." },
+  tr: { title: "🌍 Sivil Çevirmen", intro: "Toplumsal katılım için çok dilli, şiirsel bir platform." }
 };
 
 let civicHistory = [];
@@ -182,7 +226,7 @@ function translateDropdown() {
     document.getElementById("title").textContent = t.title;
     document.getElementById("intro").textContent = t.intro;
   }
-  translateText(); // αυτόματη μετάφραση
+  translateText();
 }
 
 async function translateText() {
@@ -225,45 +269,30 @@ document.getElementById("inputText").addEventListener("input", function () {
   mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
 });
 
-window.onload = function () {
-  translateDropdown();
-  showWelcome();
-};
-
 function showWelcome() {
+  const modal = document.getElementById("welcomeModal");
   if (!localStorage.getItem("welcomeSeen")) {
-    const modal = document.createElement("div");
-    modal.style.position = "fixed";
-    modal.style.top = "0";
-    modal.style.left = "0";
-    modal.style.width = "100%";
-    modal.style.height = "100%";
-    modal.style.background = "rgba(0,0,0,0.8)";
-    modal.style.color = "white";
     modal.style.display = "flex";
-    modal.style.flexDirection = "column";
-    modal.style.justifyContent = "center";
-    modal.style.alignItems = "center";
-    modal.style.zIndex = "9999";
-    modal.innerHTML = `
-      <h2>🌸 Welcome to the Civic Garden</h2>
-      <p>This poetic translator helps communities bloom across languages.</p>
-      <button style="margin-top:1rem;padding:0.5rem 1rem;" onclick="dismissWelcome()">Enter</button>
-    `;
-    document.body.appendChild(modal);
   }
 }
 
 function dismissWelcome() {
   localStorage.setItem("welcomeSeen", "true");
-  document.body.removeChild(document.body.lastChild);
+  document.getElementById("welcomeModal").style.display = "none";
 }
+
+function returnToWelcome() {
+  localStorage.removeItem("welcomeSeen");
+  showWelcome();
+}
+
+window.onload = function () {
+  translateDropdown();
+  showWelcome();
+};
 </script>
 
-  </body>
+</body>
 </html>
 
-
-
-
-      
+  
