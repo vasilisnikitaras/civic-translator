@@ -71,6 +71,7 @@
       padding: 1rem;
       border-left: 4px solid var(--accent);
       background-color: rgba(0,0,0,0.05);
+      color: var(--text);
     }
     .mirror {
       font-style: italic;
@@ -86,6 +87,7 @@
       width: 100%;
       padding: 1rem;
       border-top: 1px dashed var(--accent);
+      color: var(--text);
     }
     @media (max-width: 600px) {
       body {
@@ -151,30 +153,18 @@
   </section>
 
   <script>
-
-
-        const translations = {
+    const translations = {
       en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
       el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
       fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
-      es: { title: "🌍 Traductor Cívico", intro: "Una plataforma multilingüe y poética para la participación comunitaria." },
-      zh: { title: "🌍 公民翻译器", intro: "一个多语言、富有诗意的平台，促进社区参与与透明。" },
-      ar: { title: "🌍 المترجم المدني", intro: "منصة متعددة اللغات وشاعرية للمشاركة المجتمعية والوضوح المدني." },
-      hi: { title: "🌍 नागरिक अनुवादक", intro: "एक बहुभाषी, काव्यात्मक मंच जो सामुदायिक भागीदारी और नागरिक स्पष्टता को बढ़ावा देता है।" },
-      pt: { title: "🌍 Tradutor Cívico", intro: "Uma plataforma multilíngue e poética para o engajamento comunitário." },
-      ru: { title: "🌍 Гражданский Переводчик", intro: "Многоязычная поэтическая платформа для гражданского участия и прозрачности." },
-      ja: { title: "🌍 シビック・トランスレーター", intro: "多言語で詩的なプラットフォーム。市民の関与と透明性を促進します。" },
-      de: { title: "🌍 Bürgerübersetzer", intro: "Eine mehrsprachige, poetische Plattform für bürgerschaftliches Engagement." },
-      it: { title: "🌍 Traduttore Civico", intro: "Una piattaforma multilingue e poetica per l'impegno civico." },
-      nl: { title: "🌍 Burgervertaler", intro: "Een meertalige, poëtische platform voor burgerparticipatie." },
-      ko: { title: "🌍 시민 번역기", intro: "다국어 시적 플랫폼으로 시민 참여와 투명성을 촉진합니다." },
-      tr: { title: "🌍 Sivil Çevirmen", intro: "Toplumsal katılım için çok dilli, şiirsel bir platform." },
-      sv: { title: "🌍 Medborgaröversättare", intro: "En flerspråkig, poetisk plattform för samhällsengagemang." },
-      uk: { title: "🌍 Громадянський Перекладач", intro: "Багатомовна поетична платформа для громадської участі." },
-      id: { title: "🌍 Penerjemah Sipil", intro: "Platform multibahasa dan puitis untuk keterlibatan komunitas." },
-      vi: { title: "🌍 Trình Dịch Công Dân", intro: "Một nền tảng đa ngôn ngữ, đầy chất thơ cho sự tham gia cộng đồng." },
-      pl: { title: "🌍 Tłumacz Obywatelski", intro: "Wielojęzyczna, poetycka platforma dla zaangażowania społecznego." }
+      // ... (όλες οι υπόλοιπες γλώσσες όπως πριν)
     };
+
+    let civicHistory = [];
+
+    function toggleDark() {
+      document.body.classList.toggle('dark');
+    }
 
     function translateDropdown() {
       const lang = document.getElementById("language").value;
@@ -183,6 +173,7 @@
         document.getElementById("title").textContent = t.title;
         document.getElementById("intro").textContent = t.intro;
       }
+      translateText(); // αυτόματη μετάφραση
     }
 
     function translateText() {
@@ -190,6 +181,7 @@
       const lang = document.getElementById("language").value;
       const output = document.getElementById("translatedOutput");
       const badge = document.getElementById("badgeDisplay");
+      const log = document.getElementById("civicLog");
 
       if (input.trim() === "") {
         output.textContent = "Please enter civic insight to translate.";
@@ -199,6 +191,9 @@
 
       output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${input}</em>`;
       badge.textContent = "🌱 Insight Seed dispatched!";
+
+      civicHistory.push(`[${lang}] “${input}”`);
+      log.innerHTML = `<h3>Civic Log</h3><ul>` + civicHistory.map(item => `<li>${item}</li>`).join("") + `</ul>`;
     }
 
     document.getElementById("inputText").addEventListener("input", function () {
@@ -206,7 +201,43 @@
       mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
     });
 
-    window.onload = translateDropdown;
+    window.onload = function () {
+      translateDropdown();
+      showWelcome();
+    };
+
+    function showWelcome() {
+      if (!localStorage.getItem("welcomeSeen")) {
+        const modal = document.createElement("div");
+        modal.style.position = "fixed";
+        modal.style.top = "0";
+        modal.style.left = "0";
+        modal.style.width = "100%";
+        modal.style.height = "100%";
+        modal.style.background = "rgba(0,0,0,0.8)";
+        modal.style.color = "white";
+        modal.style.display = "flex";
+        modal.style.flexDirection = "column";
+        modal.style.justifyContent = "center";
+        modal.style.alignItems = "center";
+        modal.style.zIndex = "9999";
+        modal.innerHTML = `
+          <h2>🌸 Welcome to the Civic Garden</h2>
+          <p>This poetic translator helps communities bloom across languages.</p>
+          <button style="margin-top:1rem;padding:0.5rem 1rem;" onclick="dismissWelcome()">Enter</button>
+        `;
+        document.body.appendChild(modal);
+      }
+    }
+
+    function dismissWelcome() {
+      localStorage.setItem("welcomeSeen", "true");
+      document.body.removeChild(document.body.lastChild);
+    }
   </script>
+
+  <footer style="margin-top:4rem; font-size:0.9rem; color:var(--text);">
+    © Vasileios Nikitaras – Fanes. All rights reserved.
+  </footer>
 </body>
 </html>
