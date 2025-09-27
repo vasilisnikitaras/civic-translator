@@ -238,16 +238,19 @@ async function translateText() {
   }
 
   try {
-    const res = await fetch("https://translate.argosopentech.com/translate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        q: input,
-        source: "auto",
-        target: lang,
-        format: "text"
-      })
-    });
+const res = await fetch("https://corsproxy.io/?https://translate.argosopentech.com/translate", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    q: input,
+    source: "auto",
+    target: lang,
+    format: "text"
+  })
+});
+
     const data = await res.json();
     output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${data.translatedText}</em>`;
     badge.textContent = "🌱 Insight Seed dispatched!";
