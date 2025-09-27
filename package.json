@@ -1,0 +1,15 @@
+{
+  "name": "civic-translator",
+  "version": "1.0.0",
+  "description": "🪶 A poetic, multilingual civic translation module built with Vite.",
+  "author": "Vasilis Nikitaras",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^4.5.0"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "defaultLanguage": "en",
+  "supportedLanguages": ["en", "el", "fr", "es", "de", "ja", "zh", "hi"],
+  "civicPhrases": {
+    "en": {
+      "reportSubmitted": "Your civic report has been received.",
+      "badgeDispatched": "Badge dispatched with dignity.",
+      "translationComplete": "Translation complete."
+    },
+    "el": {
+      "reportSubmitted": "Η αναφορά σας καταχωρήθηκε.",
+      "badgeDispatched": "Το μετάλλιο στάλθηκε με αξιοπρέπεια.",
+      "translationComplete": "Η μετάφραση ολοκληρώθηκε."
+    },
+    "ja": {
+      "reportSubmitted": "市民レポートが受信されました。",
+      "badgeDispatched": "バッジが品位をもって送信されました。",
+      "translationComplete": "翻訳が完了しました。"
+    }
+  }
+}
