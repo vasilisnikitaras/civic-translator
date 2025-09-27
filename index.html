@@ -64,7 +64,7 @@
       background-color: var(--bg);
       color: var(--text);
     }
-    .output, .mirror {
+    .output, .mirror, .badge {
       margin-top: 2rem;
       max-width: 600px;
       width: 100%;
@@ -75,6 +75,10 @@
     .mirror {
       font-style: italic;
       color: var(--accent);
+    }
+    .badge {
+      font-weight: bold;
+      color: green;
     }
     #civicLog {
       margin-top: 3rem;
@@ -93,7 +97,7 @@
       .controls {
         flex-direction: column;
       }
-      textarea, .output, .mirror {
+      textarea, .output, .mirror, .badge {
         width: 90%;
       }
       select, button {
@@ -139,18 +143,17 @@
 
   <div class="mirror" id="mirrorPreview"></div>
   <div class="output" id="translatedOutput"></div>
+  <div class="badge" id="badgeDisplay"></div>
 
   <section id="civicLog">
     <h3>Civic Log (coming soon)</h3>
     <p>Here you’ll see your translation history, badges, and poetic dispatches.</p>
   </section>
 
-   <script>
-    function toggleDark() {
-      document.body.classList.toggle('dark');
-    }
+  <script>
 
-    const translations = {
+
+        const translations = {
       en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
       el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
       fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
@@ -186,16 +189,16 @@
       const input = document.getElementById("inputText").value;
       const lang = document.getElementById("language").value;
       const output = document.getElementById("translatedOutput");
-      const translatedBox = document.getElementById("translatedBox");
+      const badge = document.getElementById("badgeDisplay");
 
       if (input.trim() === "") {
         output.textContent = "Please enter civic insight to translate.";
-        translatedBox.value = "";
+        badge.textContent = "";
         return;
       }
 
-      output.innerHTML = `<strong>Translated (${lang}):</strong>`;
-      translatedBox.value = input;
+      output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${input}</em>`;
+      badge.textContent = "🌱 Insight Seed dispatched!";
     }
 
     document.getElementById("inputText").addEventListener("input", function () {
@@ -203,10 +206,7 @@
       mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
     });
 
-    // Initialize translation on page load
     window.onload = translateDropdown;
   </script>
-
-  <textarea id="translatedBox" placeholder="Translated output will appear here..." readonly></textarea>
 </body>
 </html>
