@@ -206,3 +206,21 @@ body.dark {
   border: 1px solid #555;
 }
 
+
+body.dark {
+  background-color: #111;
+  color: #eee;
+}
+
+.dark button {
+  background-color: #333;
+  color: #fff;
+}
+
+.dark select,
+.dark input,
+.dark textarea {
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+}
