@@ -1,13 +1,10 @@
 {
   "name": "Civic Translator",
   "short_name": "CivicTranslator",
-  "description": "A multilingual, poetic platform for community engagement and civic clarity.",
-  "start_url": "/",
+  "start_url": "welcome.html",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#111111",
   "theme_color": "#0077cc",
-  "orientation": "portrait",
-  "lang": "en",
   "icons": [
     {
       "src": "icon-192.png",
@@ -21,4 +18,3 @@
     }
   ]
 }
-
