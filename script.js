@@ -1,3 +1,7 @@
+function toggleDark() {
+  document.body.classList.toggle("dark");
+}
+
 function translateText() {
   const input = document.getElementById("inputText").value.trim();
   const pair = document.getElementById("languageSelect").value.split("|");
@@ -11,7 +15,6 @@ function translateText() {
 
   fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${pair[0]}|${pair[1]}`)
     .then(res => res.json())
-    
     .then(data => {
       const translated = data.responseData.translatedText;
       output.innerHTML = `<strong>Translated (${pair[0]} → ${pair[1]}):</strong><br><em>${translated}</em>`;
