@@ -8,14 +8,17 @@
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <nav><a href="/">🏠 Home</a></nav>
+  <nav>
+    <a href="https://vasilisnikitaras.github.io/civic-translator/">🏠 Home</a>
+  </nav>
+
   <div class="container">
-    <h1 id="title">🌍 Civic Translator</h1>
-    <p id="intro">A multilingual, poetic platform for community engagement and civic clarity.</p>
+    <h1>🌍 Civic Translator</h1>
+    <p>A multilingual, poetic platform for community engagement and civic clarity.</p>
 
     <button onclick="toggleDark()">🌙 Toggle Dark Mode</button>
 
-    <select id="language" onchange="translateDropdown()">
+    <select id="language">
       <option value="en">English</option>
       <option value="el">Greek</option>
       <option value="fr">French</option>
@@ -44,7 +47,7 @@
       <option value="en|tr">English → Turkish</option>
     </select>
 
-    <button onclick="document.getElementById('fallbackInput').style.display='block'">Enter Launch report</button>
+    <button onclick="document.getElementById('fallbackInput').style.display='block'">Enter Launch Report</button>
     <textarea id="fallbackInput" placeholder="Enter fallback insight..." style="display:none;"></textarea>
     <button onclick="translateWithMyMemory()">Try Fallback</button>
 
@@ -58,7 +61,7 @@
     <ul id="logList"></ul>
   </div>
 
-  <footer>© Vasileios Nikitaras – Fanes. All rights reserved.</footer>
+  <footer>© Vasilis Nikitaras – Fanes. All rights reserved.</footer>
 
   <script src="script.js" defer></script>
   <script>
