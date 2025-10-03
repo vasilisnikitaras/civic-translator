@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Civic Translator</title>
+  <link rel="manifest" href="manifest.json" />
   <style>
     :root {
       --bg: #ffffff;
@@ -28,7 +29,7 @@
       padding: 2rem;
       text-align: center;
     }
-    .controls {
+    .controls, .fallbackGroup {
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -134,7 +135,6 @@
 
     <div class="controls">
       <button onclick="toggleDark()">🌙 Toggle Dark Mode</button>
-
       <select id="language" onchange="translateDropdown()">
         <option value="en">English</option>
         <option value="el">Ελληνικά</option>
@@ -149,18 +149,16 @@
         <option value="pt">Português</option>
         <option value="tr">Türkçe</option>
       </select>
+    </div>
 
+    <div class="fallbackGroup">
       <select id="languageSelect">
         <option value="en|fr">English → French</option>
         <option value="en|el">English → Greek</option>
         <option value="el|en">Greek → English</option>
       </select>
-
-      <input type="text" id="fallbackInput" placeholder="Enter civic insight for fallback..." />
+      <input type="text" id="fallbackInput" placeholder="Enter fallback insight..." />
       <button onclick="translateWithMyMemory()">Try Fallback</button>
-
-      <div class="output" id="fallbackOutput"></div>
-      <div class="output" id="instructionsBox"></div>
     </div>
 
     <textarea id="inputText" placeholder="Enter civic insight, poetic report, or public data..."></textarea>
@@ -168,6 +166,7 @@
 
     <div class="mirror" id="mirrorPreview"></div>
     <div class="output" id="translatedOutput"></div>
+    <div class="output" id="fallbackOutput"></div>
     <div class="badge" id="badgeDisplay"></div>
 
     <section id="civicLog">
@@ -186,150 +185,185 @@
     </footer>
   </div>
 
-  <script>
-    const translations = {
-      en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
-      el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
-      fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
-      es: { title: "🌍 Traductor Cívico", intro: "Una plataforma multilingüe y poética para la participación comunitaria." },
-      de: { title: "🌍 Bürgerübersetzer", intro: "Eine mehrsprachige, poetische Plattform für bürgerschaftliches Engagement." },
-      it: { title: "🌍 Traduttore Civico", intro: "Una piattaforma multilingue e poetica per l'impegno civico." },
-      zh: { title: "🌍 公民翻译器", intro: "一个多语言、富有诗意的平台，促进社区参与与透明。" },
-      ar: { title: "🌍 المترجم المدني", intro: "منصة متعددة اللغات وشاعرية للمشاركة المجتمعية والوضوح المدني." },
-      ru: { title: "🌍 Гражданский Переводчик", intro: "Многоязычная поэтическая платформа для гражданского участия и прозрачности." },
-      ja: { title: "🌍 シビック・トランスレーター", intro: "多言語で詩的なプラットフォーム。市民の関与と透明性を促進します。" },
-      pt: { title: "🌍 Tradutor Cívico", intro: "Uma plataforma multilíngue e poética para o engajamento comunitário." },
-      tr: { title: "🌍 Sivil Çevirmen", intro: "Toplumsal katılım için çok dilli, şiirsel bir platform." }
-    };
+ <script>
+const translations = {
+  en: { title: "🌍 Civic Translator", intro: "A multilingual, poetic platform for community engagement and civic clarity." },
+  el: { title: "🌍 Μεταφραστής Πολιτών", intro: "Μια πολυγλωσσική, ποιητική πλατφόρμα για συμμετοχή και διαφάνεια." },
+  fr: { title: "🌍 Traducteur Civique", intro: "Une plateforme multilingue et poétique pour l'engagement communautaire." },
+  es: { title: "🌍 Traductor Cívico", intro: "Una plataforma multilingüe y poética para la participación comunitaria." },
+  de: { title: "🌍 Bürgerübersetzer", intro: "Eine mehrsprachige, poetische Plattform für bürgerschaftliches Engagement." },
+  it: { title: "🌍 Traduttore Civico", intro: "Una piattaforma multilingue e poetica per l'impegno civico." },
+  zh: { title: "🌍 公民翻译器", intro: "一个多语言、富有诗意的平台，促进社区参与与透明。" },
+  ar: { title: "🌍 المترجم المدني", intro: "منصة متعددة اللغات وشاعرية للمشاركة المجتمعية والوضوح المدني." },
+  ru: { title: "🌍 Гражданский Переводчик", intro: "Многоязычная поэтическая платформа для гражданского участия и прозрачности." },
+  ja: { title: "🌍 シビック・トランスレーター", intro: "多言語で詩的なプラットフォーム。市民の関与と透明性を促進します。" },
+  pt: { title: "🌍 Tradutor Cívico", intro: "Uma plataforma multilíngue e poética para o engajamento comunitário." },
+  tr: { title: "🌍 Sivil Çevirmen", intro: "Toplumsal katılım için çok dilli, şiirsel bir platform." }
+};
 
-    const instructions = {
-      en: "Type your civic insight above. Choose a target language. Click Translate. Your message will bloom below, and each dispatch will be logged in the Civic Log.",
-      el: "Πληκτρολογή
+const instructions = {
+  en: "Type your civic insight above. Choose a target language. Click Translate. Your message will bloom below, and each dispatch will be logged in the Civic Log.",
+  el: "Πληκτρολογήστε την πολιτική σας σκέψη παραπάνω. Επιλέξτε τη γλώσσα στην οποία θέλετε να μεταφραστεί. Πατήστε Μετάφραση. Το μήνυμά σας θα εμφανιστεί από κάτω και κάθε αποστολή θα καταγραφεί στο Civic Log.",
+  fr: "Saisissez votre pensée civique ci-dessus. Choisissez une langue cible. Cliquez sur Traduire. Votre message fleurira ci-dessous et chaque envoi sera enregistré dans le Civic Log.",
+  es: "Escriba su pensamiento cívico arriba. Elija un idioma de destino. Haga clic en Traducir. Su mensaje florecerá abajo y cada envío se registrará en el Civic Log.",
+  de: "Geben Sie oben Ihren bürgerlichen Gedanken ein. Wählen Sie eine Zielsprache. Klicken Sie auf Übersetzen. Ihre Nachricht erscheint unten und wird im Civic Log protokolliert.",
+  it: "Scrivi il tuo pensiero civico sopra. Scegli una lingua di destinazione. Clicca su Traduci. Il tuo messaggio apparirà sotto e ogni invio sarà registrato nel Civic Log.",
+  ja: "上に市民の思いを入力してください。翻訳先の言語を選択し、「翻訳」をクリックします。メッセージは下に表示され、すべての送信が Civic Log に記録されます."
+};
 
-      it: "Scrivi il tuo pensiero civico sopra. Scegli una lingua di destinazione. Clicca su Traduci. Il tuo messaggio apparirà sotto e ogni invio sarà registrato nel Civic Log."
-    };
+let civicHistory = [];
 
-    let civicHistory = [];
+function toggleDark() {
+  document.body.classList.toggle('dark');
+}
 
-    function toggleDark() {
-      document.body.classList.toggle('dark');
-    }
+function translateDropdown() {
+  const lang = document.getElementById("language").value;
+  const t = translations[lang];
+  if (t) {
+    document.getElementById("title").textContent = t.title;
+    document.getElementById("intro").textContent = t.intro;
+  }
+  document.getElementById("instructionsBox").textContent = instructions[lang] || "";
+  translateText();
+}
 
-    function translateDropdown() {
-      const lang = document.getElementById("language").value;
-      const t = translations[lang];
-      if (t) {
-        document.getElementById("title").textContent = t.title;
-        document.getElementById("intro").textContent = t.intro;
-      }
-      document.getElementById("instructionsBox").textContent = instructions[lang];
-      translateText();
-    }
+async function translateText() {
+  const input = document.getElementById("inputText").value;
+  const lang = document.getElementById("language").value;
+  const output = document.getElementById("translatedOutput");
+  const badge = document.getElementById("badgeDisplay");
+  const logList = document.getElementById("logList");
 
-    async function translateText() {
-      const input = document.getElementById("inputText").value;
-      const lang = document.getElementById("language").value;
-      const output = document.getElementById("translatedOutput");
-      const badge = document.getElementById("badgeDisplay");
-      const logList = document.getElementById("logList");
+  if (input.trim() === "") {
+    output.textContent = "Please enter civic insight to translate.";
+    badge.textContent = "";
+    return;
+  }
 
-      if (input.trim() === "") {
-        output.textContent = "Please enter civic insight to translate.";
-        badge.textContent = "";
-        return;
-      }
-
-      try {
-        const res = await fetch("https://corsproxy.io/?https://translate.argosopentech.com/translate", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            q: input,
-            source: "auto",
-            target: lang,
-            format: "text"
-          })
-        });
-
-        const data = await res.json();
-        output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${data.translatedText}</em>`;
-        badge.textContent = "🌱 Insight Seed dispatched!";
-        civicHistory.push(`[${lang}] “${data.translatedText}”`);
-        logList.innerHTML = civicHistory.map(item => `<li>${item}</li>`).join("");
-      } catch (err) {
-        output.textContent = "Argos failed. Trying fallback...";
-        badge.textContent = "🕊️ Whisper fallback dispatched.";
-
-        document.getElementById("fallbackInput").value = input;
-        const fallbackMap = {
-          en: "en|fr", el: "el|en", fr: "en|fr", es: "en|es", de: "en|de",
-          it: "en|it", zh: "en|zh", ar: "en|ar", ru: "en|ru", ja: "en|ja",
-          pt: "en|pt", tr: "en|tr"
-        };
-        document.getElementById("languageSelect").value = fallbackMap[lang] || `en|${lang}`;
-        translateWithMyMemory();
-      }
-    }
-
-    function translateWithMyMemory() {
-      const input = document.getElementById("fallbackInput").value;
-      const langPair = document.getElementById("languageSelect").value;
-      const output = document.getElementById("fallbackOutput");
-
-      if (!input.trim()) {
-        output.textContent = "⚠️ Please enter a message.";
-        return;
-      }
-
-      fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`)
-        .then(response => response.json())
-        .then(data => {
-          const translated = data.responseData.translatedText;
-          output.innerHTML = `🌸 Bloom: <em>${translated}</em>`;
-          document.getElementById("badgeDisplay").textContent = "🕊️ Fallback Bloom delivered.";
-          civicHistory.push(`[${langPair}] “${translated}”`);
-          document.getElementById("logList").innerHTML = civicHistory.map(item => `<li>${item}</li>`).join("");
-        })
-        .catch(error => {
-          console.error("Translation error:", error);
-          output.textContent = "⚠️ Translation failed. Please try again.";
-        });
-    }
-
-    document.getElementById("inputText").addEventListener("input", function () {
-      const mirror = document.getElementById("mirrorPreview");
-      mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
+  try {
+    const res = await fetch("https://corsproxy.io/?https://translate.argosopentech.com/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: input, source: "auto", target: lang, format: "text" })
     });
 
-    function showWelcome() {
-      const modal = document.getElementById("welcomeModal");
-      if (!localStorage.getItem("welcomeSeen")) {
-        modal.style.display = "flex";
-      }
-    }
+    const data = await res.json();
+    output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${data.translatedText}</em>`;
+    badge.textContent = "🌱 Insight Seed dispatched!";
+    civicHistory.push(`[${lang}] “${data.translatedText}”`);
+    logList.innerHTML = civicHistory.map(item => `<li>${item}</li>`).join("");
+  } catch (err) {
+    output.textContent = "Argos failed. Trying fallback...";
+    badge.textContent = "🕊️ Whisper fallback dispatched.";
 
-    function dismissWelcome() {
-      localStorage.setItem("welcomeSeen", "true");
-      document.getElementById("welcomeModal").style.display = "none";
-    }
-
-    function returnToWelcome() {
-      localStorage.removeItem("welcomeSeen");
-      const modal = document.getElementById("welcomeModal");
-      if (modal) {
-        modal.style.display = "flex";
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    }
-
-    window.onload = function () {
-      const browserLang = navigator.language.slice(0, 2);
-      const supportedLangs = Object.keys(translations);
-      const defaultLang = supportedLangs.includes(browserLang) ? browserLang : "en";
-      document.getElementById("language").value = defaultLang;
-      translateDropdown();
-      showWelcome();
+    document.getElementById("fallbackInput").value = input;
+    const fallbackMap = {
+      en: "en|fr", el: "el|en", fr: "en|fr", es: "en|es", de: "en|de",
+      it: "en|it", zh: "en|zh", ar: "en|ar", ru: "en|ru", ja: "en|ja",
+      pt: "en|pt", tr: "en|tr"
     };
+    document.getElementById("languageSelect").value = fallbackMap[lang] || `en|${lang}`;
+    translateWithMyMemory();
+  }
+}
+
+function translateWithMyMemory() {
+  const input = document.getElementById("fallbackInput").value;
+  const langPair = document.getElementById("languageSelect").value;
+  const output = document.getElementById("fallbackOutput");
+
+  if (!input.trim()) {
+    output.textContent = "⚠️ Please enter a message.";
+    return;
+  }
+
+  fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`)
+    .then(response => response.json())
+    .then(data => {
+      const translated = data.responseData.translatedText;
+      output.innerHTML = `🌸 Bloom: <em>${translated}</em>`;
+      document.getElementById("badgeDisplay").textContent = "🕊️ Fallback Bloom delivered.";
+      civicHistory.push(`[${langPair}] “${translated}”`);
+      document.getElementById("logList").innerHTML = civicHistory.map(item => `<li>${item}</li>`).join("");
+    })
+    .catch(error => {
+      console.error("Translation error:", error);
+      output.textContent = "⚠️ Translation failed. Please try again.";
+    });
+}
+
+document.getElementById("inputText").addEventListener("input", function () {
+  const mirror = document.getElementById("mirrorPreview");
+  mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
+});
+
+function showWelcome() {
+  const modal = document.getElementById("welcomeModal");
+  if (!localStorage.getItem("welcomeSeen")) {
+    modal.style.display = "flex";
+  }
+}
+
+function dismissWelcome() {
+  localStorage.setItem("welcomeSeen", "true");
+  document.getElementById("welcomeModal").style.display = "none";
+}
+
+function returnToWelcome() {
+  localStorage.removeItem("welcomeSeen");
+  const modal = document.getElementById("welcomeModal");
+  if (modal) {
+    modal.style.display = "flex";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+window.onload = function () {
+  const browserLang = navigator.language.slice(0, 2);
+  const supportedLangs = Object.keys(translations);
+  const defaultLang = supportedLangs.includes(browserLang) ? browserLang : "en";
+  document.getElementById("language").value = defaultLang;
+  translateDropdown();
+  showWelcome();
+};
+
+
+function showWelcome() {
+  const modal = document.getElementById("welcomeModal");
+  if (!localStorage.getItem("welcomeSeen")) {
+    modal.style.display = "flex";
+  }
+}
+
+function dismissWelcome() {
+  localStorage.setItem("welcomeSeen", "true");
+  document.getElementById("welcomeModal").style.display = "none";
+}
+
+function returnToWelcome() {
+  localStorage.removeItem("welcomeSeen");
+  const modal = document.getElementById("welcomeModal");
+  if (modal) {
+    modal.style.display = "flex";
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+window.onload = function () {
+  const browserLang = navigator.language.slice(0, 2);
+  const supportedLangs = Object.keys(translations);
+  const defaultLang = supportedLangs.includes(browserLang) ? browserLang : "en";
+  document.getElementById("language").value = defaultLang;
+  translateDropdown();
+  showWelcome();
+};
+</script>
+
+
+<script>
+    // JavaScript block is too long to repeat here, but you've already pasted it correctly in your GitHub editor.
+    // It includes: translations, instructions, translateText(), translateWithMyMemory(), mirror preview, modal logic, and dark mode.
   </script>
 </body>
 </html>
@@ -337,11 +371,9 @@
 
 
 
-
-
-
-
-
+  
+   
+</script>
 
 
       
