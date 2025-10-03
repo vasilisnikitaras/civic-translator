@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Welcome to Civic Translator</title>
+  <link rel="manifest" href="manifest.json" />
   <style>
     body {
       margin: 0;
@@ -36,5 +37,11 @@
   <h1>🌌 Welcome to Civic Translator</h1>
   <p>A poetic gateway to multilingual civic clarity.</p>
   <button onclick="location.href='index.html'">Enter</button>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  </script>
 </body>
 </html>
