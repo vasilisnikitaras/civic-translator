@@ -258,7 +258,6 @@ function translateDropdown() {
   translateText();
 }
 
-
 async function translateText() {
   const input = document.getElementById("inputText").value;
   const lang = document.getElementById("language").value;
@@ -273,18 +272,16 @@ async function translateText() {
   }
 
   try {
-const res = await fetch("https://corsproxy.io/?https://translate.argosopentech.com/translate", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    q: input,
-    source: "auto",
-    target: lang,
-    format: "text"
-  })
-});
+    const res = await fetch("https://corsproxy.io/?https://translate.argosopentech.com/translate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        q: input,
+        source: "auto",
+        target: lang,
+        format: "text"
+      })
+    });
 
     const data = await res.json();
     output.innerHTML = `<strong>Translated (${lang}):</strong><br><em>${data.translatedText}</em>`;
@@ -292,64 +289,28 @@ const res = await fetch("https://corsproxy.io/?https://translate.argosopentech.c
     civicHistory.push(`[${lang}] “${data.translatedText}”`);
     logList.innerHTML = civicHistory.map(item => `<li>${item}</li>`).join("");
   } catch (err) {
-    output.textContent = "Translation failed. Please try again.";
-    badge.textContent = "⚠️ Dispatch interrupted.";
+    output.textContent = "Argos failed. Trying fallback...";
+    badge.textContent = "🕊️ Whisper fallback dispatched.";
+
+    // Prepare fallback input and language pair
+    document.getElementById("fallbackInput").value = input;
+    const fallbackMap = {
+      en: "en|fr",
+      el: "el|en",
+      fr: "en|fr",
+      es: "en|es",
+      de: "en|de",
+      it: "en|it",
+      zh: "en|zh",
+      ar: "en|ar",
+      ru: "en|ru",
+      ja: "en|ja",
+      pt: "en|pt",
+      tr: "en|tr"
+    };
+    document.getElementById("languageSelect").value = fallbackMap[lang] || `en|${lang}`;
+    translateWithMyMemory();
   }
-}
-
-
-document.getElementById("inputText").addEventListener("input", function () {
-  const mirror = document.getElementById("mirrorPreview");
-  mirror.textContent = this.value ? `🪞 Echo: ${this.value}` : "";
-});
-
-function showWelcome() {
-  const modal = document.getElementById("welcomeModal");
-  if (!localStorage.getItem("welcomeSeen")) {
-    modal.style.display = "flex";
-  }
-}
-
-function dismissWelcome() {
-  localStorage.setItem("welcomeSeen", "true");
-  document.getElementById("welcomeModal").style.display = "none";
-}
-
-function returnToWelcome() {
-  localStorage.removeItem("welcomeSeen");
-  showWelcome();
-}
-
-window.onload = function () {
-  const browserLang = navigator.language.slice(0,2);
-  const supportedLangs = Object.keys(translations);
-  const defaultLang = supportedLangs.includes(browserLang) ? browserLang : "en";
-  document.getElementById("language").value = defaultLang;
-  translateDropdown();
-  showWelcome();
-};
-
-
-function translateWithMyMemory() {
-  const input = document.getElementById("fallbackInput").value;
-  const langPair = document.getElementById("languageSelect").value;
-  const output = document.getElementById("fallbackOutput");
-
-  if (!input.trim()) {
-    output.textContent = "⚠️ Please enter a message.";
-    return;
-  }
-
-  fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`)
-    .then(response => response.json())
-    .then(data => {
-      const translated = data.responseData.translatedText;
-      output.innerHTML = `🌸 Bloom: <em>${translated}</em>`;
-    })
-    .catch(error => {
-      console.error("Translation error:", error);
-      output.textContent = "⚠️ Translation failed. Please try again.";
-    });
 }
 
 
