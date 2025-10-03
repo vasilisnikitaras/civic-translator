@@ -164,6 +164,24 @@
     <option value="tr">Türkçe</option>
   </select>
 
+
+<!-- Fallback Translator with MyMemory API -->
+<select id="languageSelect">
+  <option value="en|fr">English → French</option>
+  <option value="en|el">English → Greek</option>
+  <option value="el|en">Greek → English</option>
+  <!-- Πρόσθεσε ό,τι συνδυασμούς θέλεις -->
+</select>
+
+<input type="text" id="fallbackInput" placeholder="Enter civic insight for fallback..." />
+<button onclick="translateWithMyMemory()">Try Fallback</button>
+
+<div class="output" id="fallbackOutput"></div>
+
+
+
+
+  
   <div id="instructionsBox" class="output"></div>
 </div>
 
@@ -310,6 +328,31 @@ window.onload = function () {
   translateDropdown();
   showWelcome();
 };
+
+
+function translateWithMyMemory() {
+  const input = document.getElementById("fallbackInput").value;
+  const langPair = document.getElementById("languageSelect").value;
+  const output = document.getElementById("fallbackOutput");
+
+  if (!input.trim()) {
+    output.textContent = "⚠️ Please enter a message.";
+    return;
+  }
+
+  fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(input)}&langpair=${langPair}`)
+    .then(response => response.json())
+    .then(data => {
+      const translated = data.responseData.translatedText;
+      output.innerHTML = `🌸 Bloom: <em>${translated}</em>`;
+    })
+    .catch(error => {
+      console.error("Translation error:", error);
+      output.textContent = "⚠️ Translation failed. Please try again.";
+    });
+}
+
+
 
 </script>
 
