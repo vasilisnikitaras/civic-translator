@@ -1,1 +1,109 @@
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --accent: #0077cc;
+  --hover: #00aaff;
+}
+.dark {
+  --bg: #111111;
+  --text: #ffffff;
+  --accent: #66ccff;
+  --hover: #33ddff;
+}
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  transition: background 0.3s, color 0.3s;
+}
+
+nav {
+  background-color: var(--accent);
+  padding: 0.5rem 1rem;
+  text-align: left;
+}
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+select, input, button, textarea {
+  display: block;
+  margin: 0.75rem auto;
+  width: 100%;
+  max-width: 600px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-family: inherit;
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  background-color: var(--bg);
+  color: var(--text);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+select:hover, input:hover, button:hover, textarea:hover {
+  border-color: var(--hover);
+  box-shadow: 0 0 0 3px rgba(0,170,255,0.2);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:hover {
+  background-color: var(--hover);
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.output {
+  margin-top: 1rem;
+  padding: 1rem;
+  border: 2px dashed var(--accent);
+  border-radius: 8px;
+  background-color: rgba(0, 119, 204, 0.05);
+  transition: box-shadow 0.3s ease-in-out;
+}
+.output.blooming {
+  animation: bloom 0.8s ease-out;
+}
+@keyframes bloom {
+  0% { box-shadow: 0 0 0 0 rgba(0,170,255,0.5); }
+  100% { box-shadow: 0 0 20px 10px rgba(0,170,255,0); }
+}
+
+footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--text);
+  background-color: var(--bg);
+  border-top: 1px solid var(--accent);
+}
 
